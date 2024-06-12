@@ -7,7 +7,7 @@
 	$menuUtente=<<<'UTN'
 <div id="menu">
 					<ul>
-						<li><a href=""> Aggiungi servizi al carrello </a></li>
+						<li><a href="mysql.OL.servizi.php"> Aggiungi servizi al carrello </a></li>
 						<li><a href=""> Elimina servizi dal carrello </a></li>
 						<li><a href=""> Effettua Pagamento </a></li>
 					</ul>
