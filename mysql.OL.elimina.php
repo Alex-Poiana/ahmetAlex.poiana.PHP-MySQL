@@ -1,84 +1,27 @@
 <?php
 	error_reporting (E_ALL &~E_NOTICE);
-	
-	session_start();       
+
+	session_start();               
 
 	if (!isset($_SESSION['accessoPermesso']) || $_SESSION['accessoPermesso']!="utente") 
-		header('Location: mysql.OL.login.php');
-
-	require_once ("./connessione.php");
-	
-	
-	// selezioniamo i servizi di whale whatching disponibili (stanno nella tabella OLwhaleWatch)
-	$sql = "SELECT *
-		   FROM $OLwhaleWatch_table_name
-	";
-
-	// il risultato della query va in $resultQ
-	if (!$resultQ = mysqli_query($mysqliConnection, $sql)) {
-		printf("Dammit! Can't execute whaleWatch select query.\n");
-	  exit();
-	 }
-
-	// costruzione parte tabellaServizi con elenco di servizi whaleWhatch(radio button): per ogni riga selezionata
-	// costruiamo un elemento input di tipo radio, con nome comune "selection"
-	$tabellaServizi="<table border=\"2px\" cellspacing=\"2px\" cellpadding=\"3px\" style=\"border-color: fuchsia\">\n";
-	$tabellaServizi.="<thead>\n <tr>\n <th></th>\n <th> Service Id </th>\n <th> Nome Servizio </th>\n <th> Data </th>\n <th> Costo </th>\n </tr>\n</thead>\n\n<tbody>\n";
-	while ($row = mysqli_fetch_array($resultQ)){
-		$tabellaServizi.="<tr>\n <td> <input type=\"radio\" name=\"selection\" value=\"{$row['serviceId']}\" /> </td>\n";
-		$tabellaServizi.=" <td> {$row['serviceId']} </td>\n <td> {$row['nomeServizio']} </td>\n <td> {$row['data']} </td>\n <td> {$row['costo']}&euro; </td>\n</tr>\n\n";
-	}
-	
-	// selezioniamo i servizi di dolphin swimming disponibili (stanno nella tabella OLdolphinSwim)
-	$sql = "SELECT *
-		   FROM $OLdolphinSwim_table_name
-	";
-
-	// il risultato della query va in $resultQ
-	if (!$resultQ = mysqli_query($mysqliConnection, $sql)) {
-		printf("Dammit! Can't execute dolphinSwim select query.\n");
-	  exit();
-	 }
-
-	// costruzione tabella Servizi con elenco di servizi dolphin swimming(radio button)
-	while ($row = mysqli_fetch_array($resultQ)){
-		$tabellaServizi.="<tr>\n <td> <input type=\"radio\" name=\"selection\" value=\"{$row['serviceId']}\" /> </td>\n";
-		$tabellaServizi.=" <td> {$row['serviceId']} </td>\n <td> {$row['nomeServizio']} </td>\n <td> {$row['data']} </td>\n <td> {$row['costo']}&euro; </td>\n</tr>\n\n";
-	}
-	
-	// selezioniamo i servizi di shark diving disponibili (stanno nella tabella OLsharkDive)
-	$sql = "SELECT *
-		   FROM $OLsharkDive_table_name
-	";
-
-	// il risultato della query va in $resultQ
-	if (!$resultQ = mysqli_query($mysqliConnection, $sql)) {
-		printf("Dammit! Can't execute sharkDive select query.\n");
-	  exit();
-	 }
-
-	// costruzione tabella Servizi con elenco di servizi shark diving(radio button)
-	while ($row = mysqli_fetch_array($resultQ)){
-		$tabellaServizi.="<tr>\n <td> <input type=\"radio\" name=\"selection\" value=\"{$row['serviceId']}\" /> </td>\n";
-		$tabellaServizi.=" <td> {$row['serviceId']} </td>\n <td> {$row['nomeServizio']} </td>\n <td> {$row['data']} </td>\n <td> {$row['costo']}&euro; </td>\n</tr>\n\n";
-	}
-
-	$tabellaServizi.="</tbody>\n </table>\n";
-	
-	
-	//aggiunta dei servizi al carrello e stampa dello stesso
-	$msg="";
-	if ((!isset($_SESSION['carrello']) && !$_POST) || isset($_POST['azzeraAcquisti'])){
-		$_SESSION['carrello']=array();	//carrello e' un array 
-		$msg.="<p> - Carrello vuoto - </p>";
-		$_SESSION['costoCarrello']=0;
+	   header('Location: mysql.OL.login.php');
+   
+   require_once ("./connessione.php");
+   
+   $msg="";
+   $msgCosto="";
+   $tabellaCarrello="";
+   
+	if (!isset($_SESSION['carrello']) || ($_SESSION['costoCarrello']==0)) {
+		$msg.= "<p> - Carrello vuoto - </p>\n";
 	} 
 	else {
-			if ( isset($_POST['selection']) ) {
-				$_SESSION['carrello'][]= $_POST['selection'];	
-			}
-			$msg.="<p> Contenuto del carrello: </p>\n<ul>\n";
-			$_SESSION['costoCarrello']=0;
+			$msg.="<p> Seleziona quel che vuoi eliminare dal carrello: </p>\n";
+			
+			//creazione tabella che mostra il contenuto del carrello
+			$tabellaCarrello.="<table border=\"2px\" cellspacing=\"2px\" cellpadding=\"3px\" style=\"border-color: fuchsia\">\n";
+			$tabellaCarrello.="<thead>\n <tr>\n <th></th>\n <th> Service Id </th>\n <th> Nome Servizio </th>\n <th> Data </th>\n <th> Costo </th>\n </tr>\n</thead>\n\n<tbody>\n";
+			
 			foreach ($_SESSION['carrello'] as $chiave=>$valore){
 				
 				$sql1 = "SELECT *
@@ -121,26 +64,93 @@
 				if (empty ($row1)){
 					if(empty($row2)){
 						//e' un servizio sharkDive
-						$msg.=" <li> [$chiave] $valore | {$row3['nomeServizio']} | {$row3['data']} | {$row3['costo']}&euro; </li>\n";
-						$_SESSION['costoCarrello']+=$row3['costo'];
+							$tabellaCarrello.="<tr>\n <td> <input type=\"checkbox\" name=\"eliminandi[]\" value=\"$chiave\" /> </td>\n";
+							$tabellaCarrello.=" <td> {$row3['serviceId']} </td>\n <td> {$row3['nomeServizio']} </td>\n <td> {$row3['data']} </td>\n <td> {$row3['costo']}&euro; </td>\n</tr>\n\n";
 					}
 					else {
 						//e' un servizio dolphinSwim
-						$msg.=" <li> [$chiave] $valore | {$row2['nomeServizio']} | {$row2['data']} | {$row2['costo']}&euro; </li>\n";
-						$_SESSION['costoCarrello']+=$row2['costo'];
+							$tabellaCarrello.="<tr>\n <td> <input type=\"checkbox\" name=\"eliminandi[]\" value=\"$chiave\" /> </td>\n";
+							$tabellaCarrello.=" <td> {$row2['serviceId']} </td>\n <td> {$row2['nomeServizio']} </td>\n <td> {$row2['data']} </td>\n <td> {$row2['costo']}&euro; </td>\n</tr>\n\n";
 					}
 				}
 				else {
 					//e' un servizio whaleWatch
-					$msg.=" <li> [$chiave] $valore | {$row1['nomeServizio']} | {$row1['data']} | {$row1['costo']}&euro; </li>\n";
-					$_SESSION['costoCarrello']+=$row1['costo'];
+						$tabellaCarrello.="<tr>\n <td> <input type=\"checkbox\" name=\"eliminandi[]\" value=\"$chiave\" /> </td>\n";
+						$tabellaCarrello.=" <td> {$row1['serviceId']} </td>\n <td> {$row1['nomeServizio']} </td>\n <td> {$row1['data']} </td>\n <td> {$row1['costo']}&euro; </td>\n</tr>\n\n";
 				}
-			}		   
-			$msg.= "</ul>\n";
+			}
+
+			$tabellaCarrello.="</tbody>\n </table>\n";
+				
 			if ($_SESSION['costoCarrello']!=0)
-					$msg.="<p> Costo totale del carrello: {$_SESSION['costoCarrello']}&euro; </p>\n";
+					$msgCosto.="<p> Costo totale del carrello: {$_SESSION['costoCarrello']}&euro; </p>\n";
+			
+			
+			
+			if (isset($_POST['eliminandi'])) {
+				//bisogna eliminare le cose selezionate in eliminandi[] e
+				//togliere da $_SESSION['costoCarrello'] il costo degli elementi eliminati
+				foreach ($_POST['eliminandi'] as $k=>$indiceDaEliminare){
+					$serviceId=$_SESSION['carrello'] [$indiceDaEliminare];
+					
+					$sql1 = "SELECT *
+							FROM $OLwhaleWatch_table_name
+							WHERE serviceId = \"$serviceId\"
+						";
+					
+				   $sql2 = "SELECT *
+						  FROM $OLdolphinSwim_table_name
+						  WHERE serviceId  = \"$serviceId\"
+						";
+						
+					$sql3 = "SELECT *
+						  FROM $OLsharkDive_table_name
+						  WHERE serviceId  = \"$serviceId\"
+						";
+						
+				   if (!$resultQ = mysqli_query($mysqliConnection, $sql1)) {
+						 printf("Dammit! Can't execute whaleWatch select query.\n");
+						 exit();
+				   }
+				   
+				   $row1= mysqli_fetch_array($resultQ); // se e' un servizio whaleWatch, sta qua - senno' vuota
+
+				   if (!$resultQ = mysqli_query($mysqliConnection, $sql2)) {
+						 printf("Dammit! Can't execute dolphinSwim select query.\n");
+						 exit();
+				   }
+				   
+				   $row2= mysqli_fetch_array($resultQ); // se e' un un servizio dolphinSwim, sta qua - senno' vuota
+				   
+				   
+				   if (!$resultQ = mysqli_query($mysqliConnection, $sql3)) {
+						 printf("Dammit! Can't execute sharkDive select query.\n");
+						 exit();
+				   }
+				   
+				   $row3= mysqli_fetch_array($resultQ); // se e' un un servizio sharkDive, sta qua - senno' vuota
+					
+					if (empty ($row1)){
+						if(empty($row2)){
+							//e' un servizio sharkDive
+							$_SESSION['costoCarrello']-=$row3['costo'];	
+						}
+						else {
+							//e' un servizio dolphinSwim
+							$_SESSION['costoCarrello']-=$row2['costo'];
+						}
+					}
+					else {
+						//e' un servizio whaleWatch
+						$_SESSION['costoCarrello']-=$row1['costo'];
+					}
+				
+					unset($_SESSION['carrello'][$indiceDaEliminare]);
+				}
+				header('Location: mysql.OL.elimina.php');
+			}		
 	}
-	
+
 	//chiusura connessione con il db OceanLovers
 	$mysqliConnection->close();
 ?>
@@ -172,33 +182,31 @@
 			
 		<div id="content">
 			<div id="centralBox">
-				<h2> Servizi Offerti </h2>
-				<p> Caro <?php echo $_SESSION['username']?>, scegli pure i servizi che vuoi: </p>
+				<h2> Eliminazione servizi </h2>
+				<?php echo $msg; ?>
 
 				<form action="<?php $_SERVER['PHP_SELF']?>"  method="post" >
 					<table>
 						<tr>
 							<td  style="width: 30%">
 								<p style="margin-bottom: 15%">
-									<input type="submit" name="invio" value="Aggiungi al carrello" />
+									<input type="reset" name="annulla" value="Annulla le selezioni" />
 								</p>
 								
 								<p style="margin-top: 15%">
-									<input type="submit" name="azzeraAcquisti" value="Svuota il carrello" />
+									<input type="submit" name="cancellaSelezionati" value="Cancella i selezionati" />
 								</p>
 							</td>
 
-							<td>
-								<?php echo $tabellaServizi;?>
-							</td>
+							<td> <?php echo $tabellaCarrello; ?> </td>
 						</tr>
 					</table>
 				</form>
-		
+				
+				<?php echo $msgCosto; ?>
+				
 				<hr />
 			
-				<?php echo $msg; ?>
-				<hr />
 				<!-- inizio parte per visualizzare/controllare il contenuto di $_SESSION e $_POST -->
 				<table>
 					<tr>
