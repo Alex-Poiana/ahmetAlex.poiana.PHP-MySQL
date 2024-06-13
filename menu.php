@@ -9,7 +9,7 @@
 					<ul>
 						<li><a href="mysql.OL.servizi.php"> Aggiungi servizi al carrello </a></li>
 						<li><a href="mysql.OL.elimina.php"> Elimina servizi dal carrello </a></li>
-						<li><a href=""> Effettua Pagamento </a></li>
+						<li><a href="mysql.OL.pagamento.php"> Effettua Pagamento </a></li>
 					</ul>
 				</div>
 UTN;

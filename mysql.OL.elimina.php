@@ -161,7 +161,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 	<head>
-		<title> Aggiungi Servizi </title>
+		<title> Elimina servizi </title>
 		<link rel="stylesheet" href="stile.pag.iniziali.css" type="text/css" />
 	</head>
 
@@ -182,7 +182,7 @@
 			
 		<div id="content">
 			<div id="centralBox">
-				<h2> Eliminazione servizi </h2>
+				<h2> Eliminazione Servizi </h2>
 				<?php echo $msg; ?>
 
 				<form action="<?php $_SERVER['PHP_SELF']?>"  method="post" >
