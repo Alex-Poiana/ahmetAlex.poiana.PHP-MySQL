@@ -18,9 +18,9 @@ UTN;
 	$menuAdmin=<<<'ADM'
 <div id="menu">
 					<ul>
-						<li><a href=""> Visualizzazione elenco utenti </a></li>
-						<li><a href=""> Gestione Ban/Sban utenti</a></li>
-						<li><a href=""> Gestione gestori </a></li>
+						<li><a href="mysql.OL.elencoUtenti.php"> Visualizzazione elenco utenti </a></li>
+						<li><a href="mysql.OL.gestioneBan.php"> Gestione Ban/Sban utenti</a></li>
+						<li><a href="mysql.OL.gestioneGestori.php"> Gestione gestori </a></li>
 					</ul>
 				</div>
 ADM;
