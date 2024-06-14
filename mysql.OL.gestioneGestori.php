@@ -16,7 +16,7 @@
 		exit();
 	}
 	
-	$outputTable="<table border=\"2px\" cellspacing=\"2px\" cellpadding=\"3px\" style=\"border-color: fuchsia; font-size: 85% \">\n";
+	$outputTable="<table border=\"2px\" cellspacing=\"2px\" cellpadding=\"3px\" style=\"border-color: fuchsia; font-size: 70% \">\n";
 	$outputTable.="<thead>\n <tr>\n <th></th>\n <th> Username </th>\n <th> Password </th>\n <th> Genere </th>\n <th> Nazione </th>\n";
 	$outputTable.=" <th> Tipologia Utente </th>\n <th> Somme Spese </th>\n <th> Ban </th>\n </tr>\n</thead>\n\n<tbody>\n";
 	while ($row=mysqli_fetch_array ($resultQ)) {
