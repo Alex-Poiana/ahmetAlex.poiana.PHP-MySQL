@@ -29,8 +29,8 @@ ADM;
 	$menuGestore=<<<'GST'
 <div id="menu">
 					<ul>
-						<li><a href=""> Aggiunta nuovi servizi </a></li>
-						<li><a href=""> Visualizzazione elenco acquisti utente </a></li>
+						<li><a href="mysql.OL.aggiungiServizi.php"> Aggiunta nuovi servizi </a></li>
+						<li><a href="mysql.OL.acquistiUtente.php"> Visualizzazione elenco acquisti utente </a></li>
 					</ul>
 				</div>
 GST;
