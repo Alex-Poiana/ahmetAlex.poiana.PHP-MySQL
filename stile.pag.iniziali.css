@@ -48,6 +48,7 @@
 #firstRowHeader{
 	display: flex;
 	/*border: solid pink;*/
+	border-bottom: 8px solid white;
 	justify-content: space-between;
 	align-items: center;
 	background-image: url(img/background/firstRow.avif);
@@ -57,7 +58,6 @@
 
 #secondRowHeader{
 	display: flex;
-	border-top: 8px solid white;
 	border-bottom: 8px solid white;
 	/*border: 2px solid green;*/
 	background-image: linear-gradient(to top left, #D2D2D2 0%, #0A0A0A 50%, #4CB7A5 100%);
@@ -208,47 +208,4 @@
 	/*border: solid;*/
 	margin:0;
 	text-align: center;	
-}
-
-/* css login */
-#formContainer {
-	display: flex;
-	/*border: solid pink;*/
-	justify-content: center;
-}
-
-#formContainer form {
-	border: solid fuchsia;
-	border-radius: 5px;
-	padding: 3%;
-}
-
-#formContainer h2 {
-	text-align: center;
-	color: fuchsia;
-	font-size: 2.5em;
-}
-
-#formContainer p {
-	font-size: 1.3em;
-}
-
-#signUp{
-	text-align: right;
-}
-
-#signUp a:link, #signUp a:visited {
-	text-decoration: none;
-	color: fuchsia;
-}
-
-#signUp a:hover {
-	text-decoration: underline;
-}
-
-#buttons input{
-	font-size: 1.5em;
-	background-color: fuchsia;
-	border-radius: 10px;
-	color: white;
 }
