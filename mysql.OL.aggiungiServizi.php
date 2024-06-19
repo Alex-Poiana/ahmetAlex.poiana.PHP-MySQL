@@ -142,7 +142,7 @@
 						}
 					break;
 					
-					case "Sahrk Diving":
+					case "Shark Diving":
 						//ricavo il numero di righe della tabella OLsharkDive necessario
 						//per l'assegnazione dello serviceId al servizio che si sta inserendo
 						$sql="SELECT *
